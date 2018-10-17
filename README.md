@@ -1,12 +1,13 @@
 # Project-Team-12
 
-Student Names:
-Aditi Kumari
-Aditya Doshatti
-Darshil Kapadia
+#### Student Names:
+Aditi Kumari, 
+Aditya Doshatti, 
+Darshil Kapadia, 
 Devashish Nyati
 
-Team Name: Tech Elves
+#### Team Name: 
+Tech Elves
 
 ## Idea 1: Drunk Driving Prevention
 
