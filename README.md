@@ -1,4 +1,8 @@
-# Project-Team-12
+# Project-Team-12 None approved ..here is what I am asking you to research and propose a practical use case: Multi-party computing
+
+In the era of AI and ML, where it can’t leverage require training data due to privacy regulations, MPC allows data scientists to leverage data while keeping it private and secured. Resource on MPC: https://github.com/rdragos/awesome-mpc
+Cybernetica is the main vendor: https://cyber.ee/
+
 
 #### Student Names:
 Aditi Kumari, 
