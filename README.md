@@ -1,3 +1,12 @@
+# Another idea outside of MPC:
+  # Idea: Shark Tanks on Web
+  ##### Project Description:
+  In this era, we find start-ups emarging each and every day. But since 2011, only 4% startup made it to the second year and one of the reason behind this is the funding. Regarding funding statistics, 82% of the funds come from the entrepreneur himself or herself. Shark Tanks gave a chance to this budding entrepreneurs to bring their dreams to fruition by getting funded by the show's hosts(called sharks).
+  So our idea is to provide this platform on the web where the entrepreneurs and the investors are brought together and where investors get an opportunity to look into the start-ups going around in the world and investigating and investing in any startup. From entrepreneurs point of view, they can publish their start up on the web and it will immediately be up for investment requests.
+  
+  Shark Tanks concept: https://en.wikipedia.org/wiki/Shark_Tank
+  
+
 # Project-Team-12 None approved ..here is what I am asking you to research and propose a practical use case: Multi-party computing
 
 In the era of AI and ML, where it can’t leverage require training data due to privacy regulations, MPC allows data scientists to leverage data while keeping it private and secured. Resource on MPC: https://github.com/rdragos/awesome-mpc
