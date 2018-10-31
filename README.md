@@ -13,7 +13,7 @@
   
    Providing a platform where seniors' can post their data and experience on the platform and using these experiences, any student can seek suggestions about which courses to take to - comply with minimum requirement, which courses should he take this semester so that he doesn't face a problem of pre-requisites in the consecutive semesters, what has been the current trend in the last few years.
     
-    Example: For students who are facing problem in maintaining 3.00 or above GPA, can use our application to seek suggestions of which courses one should take in future to comply with GPA requirements. And MPC will take care that no other student will be able to know what problem the student is facing and none of the seniors' data will be revealed to the any student seeking suggestions.
+   Example: For students who are facing problem in maintaining 3.00 or above GPA, can use our application to seek suggestions of which courses one should take in future to comply with GPA requirements. And MPC will take care that no other student will be able to know what problem the student is facing and none of the seniors' data will be revealed to the any student seeking suggestions.
   
    
 
