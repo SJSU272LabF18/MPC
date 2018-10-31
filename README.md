@@ -4,6 +4,7 @@
   ##### Current Problems: 
   
   Students who are new to the enviornment of selecting courses, often tend to make bad choices and in turn they fail to comply with university's requirements like : * Maintaining 3.00 or above GPA * Complying with the pre-reqs for any class they want to study * Finishing the whole program in 3 years and many more.
+  
   Example: Student A is struggling to comply with 3.00 GPA requirement and he wants to ask seniors to guide him which all courses he should take in future to comply with the requirement. But, the problem is 
   1) Student A doesn't want to tell any senior what problems he is facing.
   2) He is unaware of seniors who had faced similar problems and even if he finds out about one such senior, the senior is not willing to share private data like what GPA is he having and what grade he scored. 
@@ -11,6 +12,7 @@
   ##### Our Idea:
   
    Providing a platform where seniors' can post their data and experience on the platform and using these experiences, any student can seek suggestions about which courses to take to - comply with minimum requirement, which courses should he take this semester so that he doesn't face a problem of pre-requisites in the consecutive semesters, what has been the current trend in the last few years.
+    
     Example: For students who are facing problem in maintaining 3.00 or above GPA, can use our application to seek suggestions of which courses one should take in future to comply with GPA requirements. And MPC will take care that no other student will be able to know what problem the student is facing and none of the seniors' data will be revealed to the any student seeking suggestions.
   
    
