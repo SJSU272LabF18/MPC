@@ -2,14 +2,22 @@ import React, { Component } from 'react'
 
 import { Tabs, Tab, TabList, TabPanel } from 'react-tabs'
 import Navbar from './Navbar'
+import { Redirect } from 'react-router';
+
 import '../App.css'
 import 'react-tabs/style/react-tabs.css'
 
 class Dashboard extends Component {
 
     render() {
+        let redirect = null;
+        if(!localStorage.getItem("googleId")){
+            redirect = <Redirect to="/"/>
+        }
+
         return (
             <div class="mainBackground2">
+                {redirect}
                 <Navbar />
                 <hr class="clearfix"></hr>
                 <div>
