@@ -17,12 +17,12 @@ class Navbar extends Component {
         return(
                    
           <nav className="navbar navbar-light bg-light test" >
-          <NavLink to="/" className="mb-0 py-0" ><img src={require('../images/logo.png')} /></NavLink>
+          <NavLink to="/" className="mb-0 py-0 ml-5" ><img src={require('../images/logo.png')} /></NavLink>
           <ul className="navbar">
-          <ul className="navbar-text text-dark mt-2 "><strong>About</strong></ul>
-          <ul className="navbar-text text-dark mt-2 "><strong>Blog</strong></ul>
-          <ul className="navbar-text text-dark mt-2 "><strong>Contact</strong></ul>
-          <Link to="/login" className="navbar-text text-dark mt-2 ml-5"><strong>Login</strong></Link>
+          <ul className="navbar-text mt-2 nav-text"><strong>About</strong></ul>
+          <ul className="navbar-text nav-text mt-2 "><strong>Blog</strong></ul>
+          <ul className="navbar-text nav-text mt-2 "><strong>Contact</strong></ul>
+          <Link to="/login" className="navbar-text nav-text mt-2 ml-5"><strong>Login</strong></Link>
          </ul>  
          </nav>
         )
