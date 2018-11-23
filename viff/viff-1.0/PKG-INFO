@@ -1,0 +1,43 @@
+Metadata-Version: 1.0
+Name: viff
+Version: 1.0
+Summary: A framework for secure multi-party computation (SMPC)
+Home-page: http://viff.dk/
+Author: VIFF Development Team
+Author-email: viff-devel@viff.dk
+License: GNU LGPL
+Description: The Virtual Ideal Functionality Framework is a framework for doing
+        secure multi-party computations (SMPC). Features include:
+        
+        * secret sharing based on standard Shamir and pseudo-random secret
+        sharing (PRSS).
+        
+        * arithmetic with shares from Zp or GF(2^8): addition, multiplication,
+        exclusive-or.
+        
+        * two comparison protocols which compare secret shared Zp inputs, with
+        secret GF(2^8) or Zp output.
+        
+        * reliable Bracha broadcast secure against active adversaries.
+        
+        * computations with any number of players for which an honest majority
+        can be found.
+        
+        All operations are automatically scheduled to run in parallel meaning
+        that an operation starts as soon as the operands are ready.
+        
+Keywords: crypto,cryptography,multi-party computation,MPC,SMPC,secure comparison,ideal functionality,Shamir,pseudo-random secret sharing,PRSS,Bracha broadcast
+Platform: any
+Classifier: Development Status :: 3 - Alpha
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Communications
+Classifier: Topic :: Security :: Cryptography
+Classifier: Topic :: Software Development :: Libraries :: Application Frameworks
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
