@@ -9,10 +9,10 @@ class Dashboard extends Component {
 
     render() {
         return (
-            <div class="mainBackground">
+            <div class="mainBackground2">
                 <Navbar />
                 <hr class="clearfix"></hr>
-                <div class="bg-secyondary">
+                <div>
                     <div class="container-fluid">
                         <Tabs defaultIndex={0}>
                             <TabList className="float-left d-flex flex-column h-100 p-5 text-white justify-content-center border rounded">

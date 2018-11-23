@@ -84,8 +84,8 @@ margin-top: 80px;
 }
 .mainBackground{
   /* background:url("../src/images/background.jpg") ; */
-  background: url("./images/background.jpg");
-  background-color: rgba(0,0,0,0.7);
+  background: url("./images/business-care-clinic-1282308.jpg");
+  background-color: rgba(0,0,0,0.5);
   background-blend-mode:darken;
   height: 100vh;
   min-height: 900px;
@@ -93,6 +93,19 @@ margin-top: 80px;
   background-size: auto 100%;
   background-repeat: no-repeat;
 }
+
+.mainBackground2{
+  /* background:url("../src/images/background.jpg") ; */
+  background: url("./images/business-care-clinic-1282308.jpg");
+  background-color: rgba(0,0,0,0.9);
+  background-blend-mode:darken;
+  height: 100vh;
+  min-height: 900px;
+  width: 100%;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+}
+
 .secondaryBackground{
   background-color: black;
   opacity: 0.5px;

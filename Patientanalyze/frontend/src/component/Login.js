@@ -26,7 +26,7 @@ class Login extends Component {
 
         return (
             <div className="container-fluid">
-                <div class="mainBackground">
+                <div class="mainBackground2">
                     <Navbar />
                     <div class="d-flex flex-column justify-content-center centerAlign">
                         <div class="bg-white border">
