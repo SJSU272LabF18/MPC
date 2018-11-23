@@ -1,0 +1,10 @@
+.centerAlign{
+    width: 360px;
+    height: 500px;
+    margin: auto;
+    border: 0.5px black;
+}
+
+.bgColor{
+    background-color: #DEDEDD
+}
