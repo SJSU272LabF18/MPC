@@ -6,13 +6,17 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.1.1",
     "font-awesome": "^4.7.0",
+    "login": "^0.8.0",
     "react": "^16.5.1",
     "react-cookie": "^3.0.4",
     "react-cookies": "^0.1.0",
     "react-dom": "^16.5.1",
+    "react-google": "0.0.3",
+    "react-google-login": "^4.0.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.5"
+    "react-scripts": "1.1.5",
+    "react-tabs": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",

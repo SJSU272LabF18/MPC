@@ -8,6 +8,7 @@ import See3 from './See3';
 import Navbar from './Navbar';
 import Create from './Create';
 import Delete from './Delete';
+import Dashboard from './Dashboard';
 
 class Main extends Component {
     state = {  }
@@ -21,8 +22,8 @@ class Main extends Component {
              <Route exact path="/login" component={Login}/>
              
              <Route exact path="/create" component={Create}/> 
-             <Route exact path="/delete" component={Delete}/> */}
-           
+            {/* <Route exact path="/delete" component={Delete}/> */}
+            <Route exact path="/analyze" component={Dashboard}/>
         </div>
           )  }
 }
