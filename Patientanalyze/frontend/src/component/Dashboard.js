@@ -31,7 +31,8 @@ class Dashboard extends Component {
                             </TabList>
                             <TabPanel>
                                 <div class="d-flex flex-column p-5 justify-content-center">
-                                    <h4 class="text-center text-white"><b>Welcome! Make a new connection</b></h4>
+                                    <h4 class="text-center text-white"><b>Welcome <span className="text-primary">{localStorage.getItem('username')}</span>
+                                      , Make a new connection</b></h4>
                                     <h4 class="mb-5 text-center text-white"><b>or join in an existing one!</b></h4>
                                     <div class="d-flex flex-column p-3 justify-content-center">
                                         {/* --------------------------------------------------- */}
