@@ -3,17 +3,94 @@ import React, { Component } from 'react'
 import { Tabs, Tab, TabList, TabPanel } from 'react-tabs'
 import Navbar from './Navbar'
 import { Redirect } from 'react-router';
+import axios from 'axios'
 
 import '../App.css'
 import 'react-tabs/style/react-tabs.css'
 
 class Dashboard extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            connections: null,
+            connectionRequest : null
+        }
+    }
+
+
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name] : e.target.value
+        })
+    }
+
+    componentDidMount() {
+
+        axios.get("http://192.168.43.184:5000/getAllConnections")
+            .then(response => {
+                if (response.status === 200) {
+                    console.log("response is ", response.data.return)
+                    this.setState({
+                        connections: response.data.return
+                    })
+                }
+
+            })
+    }
+
+    joinConnection = (e) => {
+
+        console.log("Connection Id is: ",e.target.id)
+        console.log("Sending Request to: http://192.168.43.184:5000/join")
+        const data = {
+            "_id":e.target.id,
+            "value":100
+        }
+        axios.post("http://192.168.43.184:5000/join",data)
+            .then(response => {
+                if(response.status === 200){
+                    console.log(response)
+                }
+            })
+    }
+
+
+    makeConnection = (e) => {
+        console.log("Connection request #: ",this.state.connectionRequest)
+        const data = {
+            "owner":localStorage.getItem("username"),
+            "userCount":parseInt(this.state.connectionRequest)
+        }
+        axios.post("http://192.168.43.184:5000/register",data)
+        .then(response => {
+            if(response.status === 200){
+                console.log(response)
+            }
+        })
+    }
+
     render() {
         let redirect = null;
-        if(!localStorage.getItem("googleId")){
-            redirect = <Redirect to="/"/>
+        if (!localStorage.getItem("googleId")) {
+            redirect = <Redirect to="/" />
         }
+
+        if (this.state.connections) {
+            console.log("Got connections")
+            var connection = this.state.connections.map(data => {
+                console.log("RowData is: ",data)
+                return (
+                    <tr>
+                        <td>{data.owner}</td>
+                        <td>{data.userCount}</td>
+                        <td>{data.currRemainingCount}</td>
+                        <td><button class="btn-sm btn-warning" id={data._id} onClick={this.joinConnection}>Join</button></td>
+                    </tr>
+                )
+            })
+        }
+
 
         return (
             <div class="mainBackground2">
@@ -50,12 +127,12 @@ class Dashboard extends Component {
                                                     <div class="modal-body">
                                                         <form class="text-center">
                                                             <label>Enter the number of hospitals you want to allow to join to this network</label><br></br>
-                                                            <input type="number" placeholder="No. of participants"></input>
+                                                            <input type="number" onChange={this.handleChange} name="connectionRequest" placeholder="No. of participants"></input>
                                                         </form>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <button type="button" class="btn btn-warning">Save changes</button>
+                                                        <button type="button" class="btn btn-warning" onClick={this.makeConnection}>Save changes</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -66,12 +143,7 @@ class Dashboard extends Component {
                                             <th>Members Allowance</th>
                                             <th>Members Remaining</th>
                                             <th>Action</th>
-                                            <tr>
-                                                <td>Darshil Kapadia</td>
-                                                <td>3</td>
-                                                <td>2</td>
-                                                <td><button class="btn-sm btn-warning">Join</button></td>
-                                            </tr>
+                                            {connection}
                                         </table>
                                     </div>
 

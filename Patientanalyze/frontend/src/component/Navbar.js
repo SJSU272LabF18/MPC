@@ -5,8 +5,6 @@ import { Redirect } from 'react-router';
 import '../App.css';
 import { NavLink } from 'react-router-dom';
 import { GoogleLogout } from 'react-google-login';
-import { withRouter } from "react-router";
-import { connect } from "react-redux"
 
 //create the Navbar Component
 class Navbar extends Component {
