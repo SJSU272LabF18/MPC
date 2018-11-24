@@ -96,31 +96,56 @@ margin-top: 80px;
 
 .btn-see{
 background-color:rgba(47, 167, 255, 0.85) !important;
-border-bottom-color:rgb(150, 150, 150) ;
-border-bottom-left-radius:18px;
-border-bottom-right-radius:18px;
-border-bottom-style:solid;
-border-bottom-width:1px;
-border-left-color:rgb(150, 150, 150);
-border-left-style:solid;
-border-left-width:1px;
-border-right-color:rgb(150, 150, 150);
-border-right-style:solid;
-border-right-width:1px;
-border-top-color:rgb(150, 150, 150);
-border-top-left-radius:18px;
-border-top-right-radius:18px;
-border-top-style:solid;
-border-top-width:1px;
-height:75px;
-transform:matrix(1, 0, 0, 1, 0, 0);
-width:425px;
-font-family: AvenirNext-DemiBold;
-font-size: 20px;
-color: #4A4A4A;
-text-align: center;
+border-bottom-color:rgb(150, 150, 150) !important ;
+border-bottom-left-radius:18px !important;
+border-bottom-right-radius:18px !important;
+border-bottom-style:solid !important;
+border-bottom-width:1px !important;
+border-left-color:rgb(150, 150, 150) !important;
+border-left-style:solid !important;
+border-left-width:1px !important;
+border-right-color:rgb(150, 150, 150) !important;
+border-right-style:solid !important;
+border-right-width:1px !important;
+border-top-color:rgb(150, 150, 150) !important;
+border-top-left-radius:18px !important;
+border-top-right-radius:18px !important;
+border-top-style:solid !important;
+border-top-width:1px !important;
+height:75px !important;
+transform:matrix(1, 0, 0, 1, 0, 0) !important;
+width:425px !important;
+font-family: AvenirNext-DemiBold !important;
+font-size: 20px !important;
+color: #4A4A4A !important;
+text-align: center !important;
 text-decoration: none !important;
 }
+
+.btn-dash{
+  background-color:rgba(47, 167, 255, 0.85) !important;
+  border-bottom-color:rgb(150, 150, 150) !important ;
+  border-bottom-left-radius:18px !important;
+  border-bottom-right-radius:18px !important;
+  border-bottom-style:solid !important;
+  border-bottom-width:1px !important;
+  border-left-color:rgb(150, 150, 150) !important;
+  border-left-style:solid !important;
+  border-left-width:1px !important;
+  border-right-color:rgb(150, 150, 150) !important;
+  border-right-style:solid !important;
+  border-right-width:1px !important;
+  border-top-color:rgb(150, 150, 150) !important;
+  border-top-left-radius:18px !important;
+  border-top-right-radius:18px !important;
+  border-top-style:solid !important;
+  border-top-width:1px !important;
+  transform:matrix(1, 0, 0, 1, 0, 0) !important;
+  font-family: AvenirNext-DemiBold !important;
+  color: #4A4A4A !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  }
 
 .nav-text{
   color: #000000!important;
