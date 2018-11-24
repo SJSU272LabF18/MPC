@@ -11,47 +11,55 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            response:null
         };
 
     }
 
 
-    responseGoogle = (response) => {
-        console.log(response)
+    successResponseGoogle = (response) => {
+        localStorage.setItem("googleId",response.googleId)
+        localStorage.setItem("username",response.w3.ig)
+        this.setState({
+            response:response
+        })
+        console.log(response.w3.ig)
     }
 
     render() {
 
+        let redirect = null
 
+        if(localStorage.getItem("googleId")){
+            redirect = <Redirect to="/analyze"/>
+        }
         return (
-            <div className="container-fluid">
-                <div class="mainBackground">
+                
+                <div class="mainBackground2">
+                {redirect}
                     <Navbar />
+                    <div className="container-fluid">
                     <div class="d-flex flex-column justify-content-center centerAlign">
                         <div class="bg-white border">
                             <h3 class="p-3"><strong>Login into PatientAlyze</strong></h3>
                         </div>
                         <div class="bgColor border">
-                            <div class="p-3">
-                                <button class="btn btn-block btn-social btn-lg btn-google">Connect
-                                    with
-                        Google</button>
-                                <GoogleLogin
-                                    clientId="10318063588-f2n7ca9793aq2cfvvn57pq63r92cb3g6.apps.googleusercontent.com"
-                                    buttonText="Login"
-                                    onSuccess={this.responseGoogle}
-                                    onFailure={this.responseGoogle}
-                                />
+                            <div class="p-3 text-center">
+                                <GoogleLogin 
+                                clientId="10318063588-g56hbiid3a16jbeclanhg7fle84b2m3r.apps.googleusercontent.com"
+                                className="btn-block"
+                                onSuccess={this.successResponseGoogle}
+                                onFailure={this.failureResponseGoogle}>
+                                <h5 className="btn-block text-center text-muted border-left ml-3 mt-2 "><strong>Connect with Google</strong></h5>
+                                </GoogleLogin>
                             </div>
                             <div class="p-3">
-                                <button class="btn btn-block btn-social btn-lg btn-facebook">Connect
-                                    with
-                        Facebook</button>
-                            </div>
+                               <div className="text-center ml-1 mr-1 text-muted"><small>By clicking, you agree to abide by Google's policy and conditions.<div>To know more about policies click here <a className="text-primary"><u>Terms and Conditions</u></a></div></small></div>
                         </div>
                     </div>
                 </div>
+
+            </div>
             </div>
         );
     }
