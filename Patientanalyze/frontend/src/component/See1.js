@@ -8,17 +8,17 @@ class  See1 extends Component {
     }
     render() { 
         return ( 
-            <div className="container-fluid">
              <div class="mainBackground img-res">
             <Navbar />
-                <div className="centerfont text-white">
+            <div className="container-fluid">
+                <div className="centerfont text-white transition">
                 What if your hospital wanted to compare its performance with other <br></br>hospitals and predict its future… <div>
                 …but at the same time avoid revealing the private data of the patient.</div>
                 First, you enter the data in into PatientAlyze in an encrypted form.</div><br></br>
-                <p className="see2">
+                <p className="see2 transition2">
                 <img className="ml-5 w-75" src={require('../images/see how it works 1.png')} /></p>
-                <div className="text-center">
-                <Link to="/see2" className="btn btn-primary text-white ml-5 p-3 mt-3 " >WHAT ABOUT OTHERS</Link></div>
+                <div className="text-center mt-4 ">
+                <p className= "transition3"><Link to="/see2" className="btn-see text-white p-2 pl-5 pr-5 " >WHAT ABOUT OTHERS</Link></p></div>
             </div>
             </div>
          );
