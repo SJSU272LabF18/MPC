@@ -34,10 +34,11 @@ class Login extends Component {
             redirect = <Redirect to="/analyze"/>
         }
         return (
-            <div className="container-fluid">
-                {redirect}
+                
                 <div class="mainBackground2">
+                {redirect}
                     <Navbar />
+                    <div className="container-fluid">
                     <div class="d-flex flex-column justify-content-center centerAlign">
                         <div class="bg-white border">
                             <h3 class="p-3"><strong>Login into PatientAlyze</strong></h3>
@@ -57,6 +58,7 @@ class Login extends Component {
                         </div>
                     </div>
                 </div>
+
             </div>
             </div>
         );

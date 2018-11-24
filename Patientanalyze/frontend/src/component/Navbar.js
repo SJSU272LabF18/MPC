@@ -21,7 +21,6 @@ class Navbar extends Component {
        console.log("here")
         console.log(response.w3.ig)
     }
-
     render() {
             console.log(this.state.flag)
         let redirect = null;
@@ -40,7 +39,9 @@ class Navbar extends Component {
             check =
                 <ul className="navbar">
                     <ul className="navbar-text mt-2 nav-text"><strong>About</strong></ul>
-                    <ul className="navbar-text mt-2 nav-text "><strong>Blog</strong></ul>
+
+                    <ul className="navbar-text mt-2 nav-text"><strong>Blog</strong></ul>
+
                     <ul className="navbar-text mt-2 nav-text"><strong>Contact</strong></ul>
                     <GoogleLogout
                         // buttonText="Logout"
@@ -51,10 +52,12 @@ class Navbar extends Component {
                 </ul>
         } else {
             check = <ul className="navbar">
-                <ul className="navbar-text mt-2 nav-text "><strong>About</strong></ul>
-                <ul className="navbar-text mt-2 nav-text "><strong>Blog</strong></ul>
-                <ul className="navbar-text mt-2 nav-text "><strong>Contact</strong></ul>
-                <Link to="/login" className="navbar-text mt-2 nav-text ml-5"><strong>Login</strong></Link>
+
+                <ul className="navbar-text mt-2 nav-text"><strong>About</strong></ul>
+                <ul className="navbar-text mt-2 nav-text"><strong>Blog</strong></ul>
+                <ul className="navbar-text mt-2 nav-text"><strong>Contact</strong></ul>
+                <Link to="/login" className="navbar-text nav-text mt-2 ml-5"><strong>Login</strong></Link>
+
             </ul>
         }
         return (
@@ -62,7 +65,7 @@ class Navbar extends Component {
             <div>
                 {redirect}
                 <nav className="navbar navbar-light bg-light test" >
-                    <NavLink to="/" className="mb-0 py-0" ><img src={require('../images/logo.png')} /></NavLink>
+                    <NavLink to="/" className="mb-0 py-0 ml-5" ><img src={require('../images/logo.png')} /></NavLink>
                     {check}
                 </nav>
             </div>
