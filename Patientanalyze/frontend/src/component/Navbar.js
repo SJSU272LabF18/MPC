@@ -12,34 +12,52 @@ import { connect } from "react-redux"
 class Navbar extends Component {
     constructor(props) {
         super(props);
+        this.state={
+            flag:0
+        }
+    }
 
+    failure = (response) => {
+       console.log("here")
+        console.log(response.w3.ig)
     }
     render() {
-
+            console.log(this.state.flag)
         let redirect = null;
         let logout = () => {
+            console.log("i am here")
             localStorage.removeItem("googleId")
             localStorage.removeItem("username")
-            redirect = <Redirect to="/"></Redirect>
+            this.setState({flag:1})
+            redirect ="a"
+            // = <Redirect to="/"></Redirect>
         }
+        if(this.state.flag===1)
+            return <Redirect to="/" />
         let check = null;
         if (localStorage.getItem("googleId")) {
             check =
                 <ul className="navbar">
                     <ul className="navbar-text mt-2 nav-text"><strong>About</strong></ul>
+
                     <ul className="navbar-text mt-2 nav-text"><strong>Blog</strong></ul>
+
                     <ul className="navbar-text mt-2 nav-text"><strong>Contact</strong></ul>
                     <GoogleLogout
-                        buttonText="Logout"
+                        // buttonText="Logout"
+                        // color={GoogleLogout.Color.Dark}
+                        className="btn-link ml-3 nav-text"
                         onLogoutSuccess={logout}
-                    />
+                    ><div className="nav-text"><strong>Logout</strong></div></GoogleLogout>
                 </ul>
         } else {
             check = <ul className="navbar">
+
                 <ul className="navbar-text mt-2 nav-text"><strong>About</strong></ul>
                 <ul className="navbar-text mt-2 nav-text"><strong>Blog</strong></ul>
                 <ul className="navbar-text mt-2 nav-text"><strong>Contact</strong></ul>
                 <Link to="/login" className="navbar-text nav-text mt-2 ml-5"><strong>Login</strong></Link>
+
             </ul>
         }
         return (

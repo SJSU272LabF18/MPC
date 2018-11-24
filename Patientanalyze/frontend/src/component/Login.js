@@ -47,20 +47,20 @@ class Login extends Component {
                             <div class="p-3 text-center">
                                 <GoogleLogin 
                                 clientId="10318063588-g56hbiid3a16jbeclanhg7fle84b2m3r.apps.googleusercontent.com"
-                                buttonText="Login"
+                                className="btn-block"
                                 onSuccess={this.successResponseGoogle}
-                                onFailure={this.failureResponseGoogle}><p class="btn btn-block btn-social btn-lg btn-google">Connect with Google</p></GoogleLogin>
+                                onFailure={this.failureResponseGoogle}>
+                                <h5 className="btn-block text-center text-muted border-left ml-3 mt-2 "><strong>Connect with Google</strong></h5>
+                                </GoogleLogin>
                             </div>
                             <div class="p-3">
-                                <button class="btn btn-block btn-social btn-lg btn-facebook">Connect
-                                    with
-                        Facebook</button>
-                            </div>
+                               <div className="text-center ml-1 mr-1 text-muted"><small>By clicking, you agree to abide by Google's policy and conditions.<div>To know more about policies click here <a className="text-primary"><u>Terms and Conditions</u></a></div></small></div>
                         </div>
                     </div>
                 </div>
-                </div>
 
+            </div>
+            </div>
         );
     }
 }
