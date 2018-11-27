@@ -14,7 +14,8 @@ class Dashboard extends Component {
         super(props);
         this.state = {
             connections: null,
-            connectionRequest : null
+            connectionRequest : null,
+            pid:false
         }
     }
 
@@ -25,19 +26,19 @@ class Dashboard extends Component {
         })
     }
 
-    componentDidMount() {
+    // componentDidMount() {
 
-        axios.get("http://192.168.43.184:5000/getAllConnections")
-            .then(response => {
-                if (response.status === 200) {
-                    console.log("response is ", response.data.return)
-                    this.setState({
-                        connections: response.data.return
-                    })
-                }
+    //     axios.get("http://192.168.43.184:5000/getAllConnections")
+    //         .then(response => {
+    //             if (response.status === 200) {
+    //                 console.log("response is ", response.data.return)
+    //                 this.setState({
+    //                     connections: response.data.return
+    //                 })
+    //             }
 
-            })
-    }
+    //         })
+    // }
 
     joinConnection = (e) => {
 
@@ -69,6 +70,40 @@ class Dashboard extends Component {
             }
         })
     }
+
+    onFileSelect =(e)=>{
+        const files = e.target.files
+        console.log(files)
+        this.setState({
+            photos:files
+        });
+    }
+
+    onSubmitForm =(e) =>{
+        console.log("here in form");
+        let formData = new FormData();
+        const files = this.state.photos;
+        console.log(files.originalname)
+        // for(var i=0;i<files.length;++i){
+        //     formData.append("files",files[i]);
+        // }
+        this.setState({pid:true})
+        const config= {
+            headers:{
+                'content-type':'multipart/form-data'
+            }
+        }
+       
+        console.log("in request making");
+        axios.post("http://192.168.43.184:5000/upload",formData,config).then(response=>{
+            console.log(response.data);
+            // var {a}=this.state
+            // a=response.data.split(",")
+            // this.setState({a:a})
+            // console.log("Inside data"+ a)
+        });
+      }
+
 
     render() {
         let redirect = null;
@@ -157,15 +192,19 @@ class Dashboard extends Component {
                                     <h4 class="text-center text-white">Welcome to PatientAlyze.</h4>
                                     <h4 class="text-center text-white">Please upload your hospital's</h4>
                                     <h4 class="text-center text-white">private data to get started</h4><br></br><br></br>
-                                    <form class="w-50 h-100 border bg-grey mx-auto pt-5 pb-5 text-center text-white">
+                                    <div class="w-50 h-100 border bg-grey mx-auto pt-5 pb-5 text-center text-white">
                                         <p>Drop CSV file to upload</p>
-                                        <button class="btn btn-see text-white ">Upload</button>
-                                    </form>
+                                        
+                                        <input type="file" name="files" onChange={this.onFileSelect} multiple/>
+                                        <input type="hidden" name="propertyid" value="12345" />
+                                        <button class="btn btn-see text-white "  onClick={this.onSubmitForm}>Upload</button>
+                                    </div>
                                 </div>
                             </TabPanel>
 
                             <TabPanel>
                                 <div class="d-flex flex-column justify-content-center p-5">
+                              
                                     <h4 class="text-center text-white">Verify your data before letting other </h4>
                                     <h4 class="text-center text-white">parties use it.</h4>
                                     <div class="d-flex flex-column p-5 justify-content-center">
@@ -180,6 +219,7 @@ class Dashboard extends Component {
                                             </tr>
                                         </table>
                                     </div>
+                                    
                                 </div>
                             </TabPanel>
 
@@ -188,13 +228,14 @@ class Dashboard extends Component {
                                     <h4 class="text-center text-white">View your results </h4>
                                     <div class="d-flex flex-column p-5 justify-content-center">
                                         <table class="text-center text-white border">
-                                            <th>File Name</th>
-                                            <th>Uploaded On</th>
-                                            <th>Action</th>
                                             <tr>
-                                                <td>Darshil Kapadia.csv</td>
+                                                <div className="mb-1 mt-4">Your patient prediction for next year: 2341</div>
+                                                <div className="mb-4">Average patient prediction of all the hospitals: 2451</div>
+                                                
+                                            <img className="img-fluid" src={require('../images/hospital1.png')} />
+                                                {/* <td>Darshil Kapadia.csv</td>
                                                 <td>2018-09-01</td>
-                                                <td><button class="btn btn-dash text-white ">Download</button></td>
+                                                <td><button class="btn btn-dash text-white ">Download</button></td> */}
                                             </tr>
                                         </table>
                                     </div>

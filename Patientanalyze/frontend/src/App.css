@@ -168,7 +168,7 @@ text-decoration: none !important;
   background-color: rgba(0,0,0,0.9);
   background-blend-mode:darken;
   height: 100vh;
-  min-height: 100vh;
+  min-height: 1000px;
   width: 100%;
   background-size: cover;
   background-repeat: no-repeat;
