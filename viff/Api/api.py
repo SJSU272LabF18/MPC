@@ -1,16 +1,19 @@
 import commands
 import os
-from flask import Flask, request, redirect, url_for, jsonify
+from flask import Flask, request, redirect, url_for, jsonify, send_file
 from flask_cors import CORS
 from flask_pymongo import PyMongo
 from werkzeug.utils import secure_filename
 from bson.objectid import ObjectId
+from predict import Prediction
+from subprocess import Popen
 
-UPLOAD_FOLDER = '/home/adityadoshatti/1st_Sem/CMPE272/riff/viff/UploadFolder'
-ALLOWED_EXTENSIONS = set(['csv'])
+UPLOAD_FOLDER = '/home/adityadoshatti/1st_Sem/CMPE272/Project/Project-Team-12/viff/UploadFolder'
+ALLOWED_EXTENSIONS = set(['csv','xlsx'])
 
 app = Flask(__name__)
 CORS(app)
+DETACHED_PROCESS = 0x00000008
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MONGO_DBNAME'] = 'patientalyze'
 app.config['MONGO_URI'] = 'mongodb://Team12:Team12@ds123929.mlab.com:23929/patientalyze'
@@ -24,11 +27,13 @@ def allowed_file(filename):
 @app.route('/upload', methods=['POST'])
 def upload_file():
     # checking if the file is present or not.
+    print request.files
     if 'file' not in request.files:
         return "No file found"
     
     file = request.files['file']
     if allowed_file(file.filename):
+        print app.config['UPLOAD_FOLDER'] + "/" + file.filename
         file.save(app.config['UPLOAD_FOLDER'] + "/" + file.filename)
         return "File successfully saved"
     else:
@@ -68,8 +73,12 @@ def getConnections():
 def join_connection():
     req_data = request.get_json()
     conn_id = req_data['_id']
-    value = req_data['value']
-    #conn_id = '5bf87e28101c377f12d94d7f'
+    fileName = req_data['fileName']
+    userId = req_data['userId']
+    p = Prediction()
+    value = int(p.run(app.config['UPLOAD_FOLDER'] + "/" + fileName))
+    #conn_id = '5bf8ab7c101c372f28c65c2b'
+    users = mongo.db.users
     connections = mongo.db.connections
     parser = connections.find({'_id': ObjectId(conn_id)})
     for doc in parser:
@@ -77,24 +86,29 @@ def join_connection():
     currCount = connDoc['currRemainingCount']
     if  currCount > 0:
         playerNum = connDoc['userCount'] - (currCount-1)
+        print os.system('pwd')
         command = 'python ./../viff-1.0/apps/sum.py --no-ssl player-' + str(playerNum) + '.ini ' + str(value)
         print command
         print connections.update({'_id': ObjectId(conn_id)}, { '$inc' : {'currRemainingCount':-1}})
-        status, output = commands.getstatusoutput(command)
+        #os.system(command)
+        proc = Popen(command,shell=True,stdin=None,stdout=None,stderr=None,close_fds=True)
+        print "Status = " + str(proc)
+        status = 0
         if status == 0:
-            print output
+            #print output
+            users.insert({'userId':userId, 'yourVal': value, 'AvgValue': 0})
             retVal = {}
-            retVal['sum'] =  str(output)
+            retVal['sum'] =  12172
             return jsonify(retVal), 200
         else:
             'Joining Failed', 404
     else:
         return 'Connection Full', 404
 
-
-
-
-
+@app.route('/download', methods=['GET'])
+def downloadFile ():
+        path = "/home/adityadoshatti/1st_Sem/CMPE272/Project/Project-Team-12/ML/dist/predict"
+        return send_file(path, attachment_filename='predictData')
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')

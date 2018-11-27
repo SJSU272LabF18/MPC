@@ -23,10 +23,9 @@ class Prediction:
         lungcancer = df.loc[df['Disease'] == 'Lung Cancer']
         fever = df.loc[df['Disease'] == 'Fever']
 
+
         # Data preprocessing
         df = df.sort_values('Date')
-        cols = ['Disease']
-        df.drop(cols, axis=1, inplace=True)
         df = df.groupby('Date')['Number of Patients'].sum().reset_index()
 
         # Indexing with time series data
@@ -61,8 +60,8 @@ class Prediction:
 
         # Save File
         fileNameOnly, ext = fileName.split('.')
-        plt.savefig(fileNameOnly + '.png')
-        plt.close()
+        plt.savefig(fileNameOnly + '.png', block=False)
+        plt.close('all')
 
         # Heart Attack
         heartattack = heartattack.sort_values('Date')
@@ -213,8 +212,9 @@ class Prediction:
         plt.close()
 
 
+
         sumVal = sum(pred_mean)
-        return sum
+        return sumVal/100
 if __name__ == "__main__":
     p = Prediction()
     fileName = sys.argv[1]
