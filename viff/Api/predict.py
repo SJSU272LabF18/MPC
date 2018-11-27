@@ -55,9 +55,10 @@ class Prediction:
 
         # Save File
         fileNameOnly, ext = fileName.split('.')
-        plt.savefig(fileNameOnly + '.png')
+        plt.savefig(fileNameOnly + '.png', block=False)
+        plt.close('all')
         sumVal = sum(pred_mean)
-        return sum
+        return sumVal/100
 if __name__ == "__main__":
     p = Prediction()
     fileName = sys.argv[1]
