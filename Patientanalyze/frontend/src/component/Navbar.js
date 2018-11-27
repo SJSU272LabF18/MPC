@@ -41,6 +41,7 @@ class Navbar extends Component {
                     <ul className="navbar-text mt-2 nav-text"><strong>Blog</strong></ul>
 
                     <ul className="navbar-text mt-2 nav-text"><strong>Contact</strong></ul>
+                    <ul className="navbar-text mt-2 nav-text"><strong><Link to="/analyze">Dashboard</Link></strong></ul>
                     <GoogleLogout
                         // buttonText="Logout"
                         // color={GoogleLogout.Color.Dark}

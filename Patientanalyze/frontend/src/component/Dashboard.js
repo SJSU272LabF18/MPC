@@ -14,43 +14,46 @@ class Dashboard extends Component {
         super(props);
         this.state = {
             connections: null,
-            connectionRequest : null,
-            pid:false
+            connectionRequest: null,
+            pid: false,
+            photos:null
         }
     }
 
 
     handleChange = (e) => {
         this.setState({
-            [e.target.name] : e.target.value
+            [e.target.name]: e.target.value
         })
     }
 
-    // componentDidMount() {
+    componentDidMount() {
 
-    //     axios.get("http://192.168.43.184:5000/getAllConnections")
-    //         .then(response => {
-    //             if (response.status === 200) {
-    //                 console.log("response is ", response.data.return)
-    //                 this.setState({
-    //                     connections: response.data.return
-    //                 })
-    //             }
+        axios.get("http://10.250.204.114:5000/getAllConnections")
+            .then(response => {
+                if (response.status === 200) {
+                    console.log("response is ", response.data.return)
+                    this.setState({
+                        connections: response.data.return
+                    })
+                }
 
-    //         })
-    // }
+            })
+    }
 
     joinConnection = (e) => {
 
-        console.log("Connection Id is: ",e.target.id)
-        console.log("Sending Request to: http://192.168.43.184:5000/join")
+        console.log("Connection Id is: ", e.target.id)
+        console.log("Sending Request to: http://10.250.204.114:5000/join")
         const data = {
-            "_id":e.target.id,
-            "value":100
+            "_id": e.target.id,
+            "fileName": localStorage.getItem('fileName'),
+            "userId":localStorage.getItem('googleId')
         }
-        axios.post("http://192.168.43.184:5000/join",data)
+        console.log("Request Data: ",data)
+        axios.post("http://10.250.204.114:5000/join", data)
             .then(response => {
-                if(response.status === 200){
+                if (response.status === 200) {
                     console.log(response)
                 }
             })
@@ -58,51 +61,52 @@ class Dashboard extends Component {
 
 
     makeConnection = (e) => {
-        console.log("Connection request #: ",this.state.connectionRequest)
+        console.log("Connection request #: ", this.state.connectionRequest)
         const data = {
-            "owner":localStorage.getItem("username"),
-            "userCount":parseInt(this.state.connectionRequest)
+            "owner": localStorage.getItem("username"),
+            "userCount": parseInt(this.state.connectionRequest)
         }
-        axios.post("http://192.168.43.184:5000/register",data)
-        .then(response => {
-            if(response.status === 200){
-                console.log(response)
-            }
-        })
+        axios.post("http://192.168.43.184:5000/register", data)
+            .then(response => {
+                if (response.status === 200) {
+                    console.log(response)
+                }
+            })
     }
 
-    onFileSelect =(e)=>{
-        const files = e.target.files
+    onFileSelect = (e) => {
+        const files = e.target.files[0]
         console.log(files)
         this.setState({
-            photos:files
+            photos: files
+        }, () => {
+            console.log(this.state.photos)
         });
     }
 
-    onSubmitForm =(e) =>{
+    onSubmitForm = (e) => {
         console.log("here in form");
+        localStorage.setItem('fileName',this.state.photos.name)
         let formData = new FormData();
-        const files = this.state.photos;
-        console.log(files.originalname)
-        // for(var i=0;i<files.length;++i){
-        //     formData.append("files",files[i]);
-        // }
-        this.setState({pid:true})
-        const config= {
-            headers:{
-                'content-type':'multipart/form-data'
+        formData.append('file',this.state.photos)
+        formData.append('googleId',localStorage.getItem('googleId'))
+        //console.log(typeof formData.get('file'))
+        this.setState({ pid: true })
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
             }
         }
-       
+
+        const data = {
+            "googleId":localStorage.getItem('googleId')
+        }
         console.log("in request making");
-        axios.post("http://192.168.43.184:5000/upload",formData,config).then(response=>{
+        axios.post("http://10.250.204.114:5000/upload", formData,config)
+        .then(response => {
             console.log(response.data);
-            // var {a}=this.state
-            // a=response.data.split(",")
-            // this.setState({a:a})
-            // console.log("Inside data"+ a)
         });
-      }
+    }
 
 
     render() {
@@ -114,7 +118,7 @@ class Dashboard extends Component {
         if (this.state.connections) {
             console.log("Got connections")
             var connection = this.state.connections.map(data => {
-                console.log("RowData is: ",data)
+                console.log("RowData is: ", data)
                 return (
                     <tr>
                         <td>{data.owner}</td>
@@ -136,16 +140,33 @@ class Dashboard extends Component {
                     <div class="container-fluid">
                         <Tabs defaultIndex={0}>
                             <TabList className="float-left d-flex flex-column h-100 p-5 text-white justify-content-center border rounded">
-                                <Tab className="p-3 btn">Create/Connect to a network</Tab>
                                 <Tab className="p-3 btn">Upload Data</Tab>
+                                <Tab className="p-3 btn">Create/Connect to a network</Tab>
                                 <Tab className="p-3 btn">Verify Data</Tab>
                                 <Tab className="p-3 btn">Analyze Data</Tab>
                                 <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
                             </TabList>
+
+                            <TabPanel>
+                                <div class="d-flex flex-column justify-content-center p-5">
+                                    <h4 class="text-center text-white">Welcome to PatientAlyze.</h4>
+                                    <h4 class="text-center text-white">Please upload your hospital's</h4>
+                                    <h4 class="text-center text-white">private data to get started</h4><br></br><br></br>
+                                    <div class="w-50 h-100 border bg-grey mx-auto pt-5 pb-5 text-center text-white">
+                                        <p>Drop CSV file to upload</p>
+
+                                        <input type="file" name="files" onChange={this.onFileSelect}/>
+                                        <button  onClick={this.onSubmitForm}>Upload</button>
+                                        {/*<input type="hidden" name="propertyid" value="12345" />
+                                        */}
+                                    </div>
+                                </div>
+                            </TabPanel>
+
                             <TabPanel>
                                 <div class="d-flex flex-column p-5 justify-content-center">
                                     <h4 class="text-center text-white"><b>Welcome <span className="text-primary">{localStorage.getItem('username')}</span>
-                                      , Make a new connection</b></h4>
+                                        , Make a new connection</b></h4>
                                     <h4 class="mb-5 text-center text-white"><b>or join in an existing one!</b></h4>
                                     <div class="d-flex flex-column p-3 justify-content-center">
                                         {/* --------------------------------------------------- */}
@@ -187,24 +208,11 @@ class Dashboard extends Component {
                                 </div>
                             </TabPanel>
 
-                            <TabPanel>
-                                <div class="d-flex flex-column justify-content-center p-5">
-                                    <h4 class="text-center text-white">Welcome to PatientAlyze.</h4>
-                                    <h4 class="text-center text-white">Please upload your hospital's</h4>
-                                    <h4 class="text-center text-white">private data to get started</h4><br></br><br></br>
-                                    <div class="w-50 h-100 border bg-grey mx-auto pt-5 pb-5 text-center text-white">
-                                        <p>Drop CSV file to upload</p>
-                                        
-                                        <input type="file" name="files" onChange={this.onFileSelect} multiple/>
-                                        <input type="hidden" name="propertyid" value="12345" />
-                                        <button class="btn btn-see text-white "  onClick={this.onSubmitForm}>Upload</button>
-                                    </div>
-                                </div>
-                            </TabPanel>
+
 
                             <TabPanel>
                                 <div class="d-flex flex-column justify-content-center p-5">
-                              
+
                                     <h4 class="text-center text-white">Verify your data before letting other </h4>
                                     <h4 class="text-center text-white">parties use it.</h4>
                                     <div class="d-flex flex-column p-5 justify-content-center">
@@ -219,7 +227,7 @@ class Dashboard extends Component {
                                             </tr>
                                         </table>
                                     </div>
-                                    
+
                                 </div>
                             </TabPanel>
 
@@ -231,8 +239,8 @@ class Dashboard extends Component {
                                             <tr>
                                                 <div className="mb-1 mt-4">Your patient prediction for next year: 2341</div>
                                                 <div className="mb-4">Average patient prediction of all the hospitals: 2451</div>
-                                                
-                                            <img className="img-fluid" src={require('../images/hospital1.png')} />
+
+                                                <img className="img-fluid" src={require('../images/hospital1.png')} />
                                                 {/* <td>Darshil Kapadia.csv</td>
                                                 <td>2018-09-01</td>
                                                 <td><button class="btn btn-dash text-white ">Download</button></td> */}
@@ -250,3 +258,35 @@ class Dashboard extends Component {
 }
 
 export default Dashboard
+
+
+
+
+
+
+
+
+{/*<td>
+                            <button class="btn-sm btn-warning" data-toggle="modal" data-target={"#exampleModalCenter" + data._id}>
+                                Join
+                            </button>
+                            <div class="modal fade" id={"exampleModalCenter" + data._id} tabindex="-1" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Upload CSV File</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <input type="file" name="files" onChange={this.onFileSelect} multiple />
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary" >Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>*/}
