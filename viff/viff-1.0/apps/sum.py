@@ -39,6 +39,7 @@ def protocol(rt):
 
     def got_result(result):
         print "Sum:", result
+        print "Call something else here"
         rt.shutdown()
 
     x, y, z = rt.shamir_share([1, 2, 3], Zp, input)

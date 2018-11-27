@@ -27,6 +27,7 @@ def allowed_file(filename):
 @app.route('/upload', methods=['POST'])
 def upload_file():
     # checking if the file is present or not.
+    print request.files
     if 'file' not in request.files:
         return "No file found"
     
@@ -71,11 +72,13 @@ def getConnections():
 @app.route('/join', methods=['POST'])
 def join_connection():
     req_data = request.get_json()
-    #conn_id = req_data['_id']
+    conn_id = req_data['_id']
     fileName = req_data['fileName']
+    userId = req_data['userId']
     p = Prediction()
     value = int(p.run(app.config['UPLOAD_FOLDER'] + "/" + fileName))
-    conn_id = '5bf8ab7c101c372f28c65c2b'
+    #conn_id = '5bf8ab7c101c372f28c65c2b'
+    users = mongo.db.users
     connections = mongo.db.connections
     parser = connections.find({'_id': ObjectId(conn_id)})
     for doc in parser:
@@ -93,6 +96,7 @@ def join_connection():
         status = 0
         if status == 0:
             #print output
+            users.insert({'userId':userId, 'yourVal': value, 'AvgValue': 0})
             retVal = {}
             retVal['sum'] =  12172
             return jsonify(retVal), 200
