@@ -11,7 +11,7 @@ from subprocess import Popen
 UPLOAD_FOLDER = '/home/adityadoshatti/1st_Sem/CMPE272/Project/Project-Team-12/viff/UploadFolder'
 ALLOWED_EXTENSIONS = set(['csv','xlsx'])
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 CORS(app)
 DETACHED_PROCESS = 0x00000008
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -65,9 +65,35 @@ def getConnections():
     conList = []
     #{u'owner': u'MGM Hospital', u'currRemainingCount': 0, u'_id': ObjectId('5bf87e28101c377f12d94d7f'), u'userCount': 2}
     for doc in connections.find():
-        conList.append({'owner':doc['owner'], 'currRemainingCount': doc['currRemainingCount'], '_id':''+str(doc['_id']), 'userCount': doc['userCount']})
+        if doc['currRemainingCount'] > 0:
+            conList.append({'owner':doc['owner'], 'currRemainingCount': doc['currRemainingCount'], '_id':''+str(doc['_id']), 'userCount': doc['userCount']})
     retVal['return']  = conList
     return jsonify(retVal), 200
+
+@app.route('/getUserData', methods=['POST'])
+def getUserData():
+    users = mongo.db.users
+    req_data = request.get_json()
+    print req_data
+    userId = req_data['userId']
+    #userId = 100029303757140601712
+    doc = users.find_one({'userId':str(userId)})
+    userData = []
+    if doc != None:
+        userData.append({'userId':doc['userId'], 'yourVal': doc['yourVal'], '_id':''+str(doc['_id']), 'AvgValue': doc['AvgValue']})
+        retVal = {}
+        retVal['user']  = userData
+        return jsonify(retVal), 200
+    else:
+        return "Not found", 404
+
+@app.route('/updateAvgValue', methods=['POST'])
+def updateAvgValue():
+    users = mongo.db.users
+    req_data = request.get_json()
+    data = req_data['AvgValue']
+    users.update({}, {'$set': {'AvgValue': data}},multi=True, upsert=True)
+    return "Done", 200
 
 @app.route('/join', methods=['POST'])
 def join_connection():
@@ -96,19 +122,26 @@ def join_connection():
         status = 0
         if status == 0:
             #print output
-            users.insert({'userId':userId, 'yourVal': value, 'AvgValue': 0})
+            value *= 100
+            users.insert({'userId':str(userId), 'yourVal': value, 'AvgValue': 0})
             retVal = {}
-            retVal['sum'] =  12172
+            retVal['sum'] =  'Will be updated soon!'
             return jsonify(retVal), 200
         else:
             'Joining Failed', 404
     else:
         return 'Connection Full', 404
 
-@app.route('/download', methods=['GET'])
+@app.route('/getImage', methods=['POST'])
 def downloadFile ():
-        path = "/home/adityadoshatti/1st_Sem/CMPE272/Project/Project-Team-12/ML/dist/predict"
-        return send_file(path, attachment_filename='predictData')
+    req_data = request.get_json()
+    print req_data
+    fileName = req_data['imageName']
+    pathToFile = app.config['UPLOAD_FOLDER'] + "/" + fileName
+    if os.path.exists(pathToFile):
+        return send_file(pathToFile, attachment_filename=fileName), 200
+    else:
+        return 'File Not Found', 400
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
