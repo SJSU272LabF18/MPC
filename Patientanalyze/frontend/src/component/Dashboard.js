@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 
 import { Tabs, Tab, TabList, TabPanel } from 'react-tabs'
 import Navbar from './Navbar'
+import { Chart, Pie, Line, Bar } from 'react-chartjs-2'
 import { Redirect } from 'react-router';
-import {Bar} from 'react-chartjs-2'
 import axios from 'axios'
-import {BASE_URL} from './baseurl'
+import { BASE_URL } from './baseurl'
 
 import '../App.css'
 import 'react-tabs/style/react-tabs.css'
@@ -18,25 +18,27 @@ class Dashboard extends Component {
             connections: null,
             connectionRequest: null,
             pid: false,
-            photos:null,
-            flag:"",
-            graphresults:null,
-            a:"",
-            b:"",
-            // planetData:""
+            photos: null,
+            flag: "",
+            graphresults: null,
+            a: "",
+            b: "",
+            planetData: "",
             // planetData :{
             //     labels: ['Your value', 'Average Value'],
             //     datasets: [   {
-                      
+
             //       data:[
             //         328,
             //         26
-                
+
             //       ],
             //       backgroundColor: ['rgba(99, 132, 0, 0.6)','rgba(255, 255, 102, 0.6)'],
             //       width:'20cm'
             //     }]
             //   }
+            hospitalData: null,
+            predictedImage: null,
         }
     }
 
@@ -49,17 +51,41 @@ class Dashboard extends Component {
 
     componentDidMount() {
         // axios.get(BASE_URL+"/getAllConnections")
-        axios.get(BASE_URL+"/getAllConnections")
+        axios.get(BASE_URL + "/getAllConnections")
             .then(response => {
                 if (response.status === 200) {
-                    // console.log("response is ", response.data.return)
-                    console.log(response.data.return)
+                    console.log("response is ", response.data.return)
                     this.setState({
                         connections: response.data.return
                     })
                 }
 
             })
+
+        if (localStorage.getItem("fileName")) {
+            if (localStorage.getItem("fileName").search("xlsx") !== -1) {
+                let imageName = localStorage.getItem("fileName").replace("xlsx", "png")
+                localStorage.setItem('imageName', imageName)
+            } else if (localStorage.getItem("fileName").search("csv") !== -1) {
+                let imageName = localStorage.getItem("fileName").replace("csv", "png")
+                localStorage.setItem('imageName', imageName)
+            } else {
+
+            }
+            const data = {
+                imageName: localStorage.getItem("imageName")
+            }
+            axios.post("http://10.250.204.114:5000/getImage", data, { responseType: 'arraybuffer' })
+                .then(response => {
+                    const base64 = btoa(
+                        new Uint8Array(response.data).reduce(
+                            (data, byte) => data + String.fromCharCode(byte),
+                            '',
+                        ),
+                    );
+                    this.setState({ predictedImage: "data:;base64," + base64 });
+                })
+        }
     }
 
     joinConnection = (e) => {
@@ -69,10 +95,10 @@ class Dashboard extends Component {
         const data = {
             "_id": e.target.id,
             "fileName": localStorage.getItem('fileName'),
-            "userId":localStorage.getItem('googleId')
+            "userId": localStorage.getItem('googleId')
         }
-        console.log("Request Data: ",data)
-        axios.post(BASE_URL+"/join", data)
+        console.log("Request Data: ", data)
+        axios.post(BASE_URL + "/join", data)
             .then(response => {
                 if (response.status === 200) {
                     console.log(response)
@@ -87,7 +113,7 @@ class Dashboard extends Component {
             "owner": localStorage.getItem("username"),
             "userCount": parseInt(this.state.connectionRequest)
         }
-        axios.post(BASE_URL+"/register", data)
+        axios.post(BASE_URL + "/register", data)
             .then(response => {
                 if (response.status === 200) {
                     console.log(response)
@@ -99,18 +125,17 @@ class Dashboard extends Component {
         const files = e.target.files[0]
         console.log(files)
         this.setState({
-            photos: files
+            hospitalData: files
         }, () => {
-            console.log(this.state.photos)
+            console.log(this.state.hospitalData)
         });
     }
 
     onSubmitForm = (e) => {
         console.log("here in form");
-        localStorage.setItem('fileName',this.state.photos.name)
         let formData = new FormData();
-        formData.append('file',this.state.photos)
-        formData.append('googleId',localStorage.getItem('googleId'))
+        formData.append('file', this.state.hospitalData)
+        formData.append('googleId', localStorage.getItem('googleId'))
         //console.log(typeof formData.get('file'))
         this.setState({ pid: true })
         const config = {
@@ -120,75 +145,75 @@ class Dashboard extends Component {
         }
 
         const data = {
-            "googleId":localStorage.getItem('googleId')
+            "googleId": localStorage.getItem('googleId')
         }
         console.log("in request making");
-        axios.post(BASE_URL+"/upload", formData,config)
-        .then(response => {
-            console.log(response.data);
-        });
+        axios.post(BASE_URL + "/upload", formData, config)
+            .then(response => {
+                console.log(response.data);
+                localStorage.setItem('fileName', this.state.hospitalData.name)
+
+            });
     }
-    
+
     requestGraph = (e) => {
         console.log("Inside graph requestr")
-        console.log("here"+localStorage.getItem('googleId'))
+        console.log("here" + localStorage.getItem('googleId'))
         const Data = {
-            "userId":localStorage.getItem('googleId')
+            "userId": localStorage.getItem('googleId')
         }
-        axios.post(BASE_URL+"/getUserData",Data)
+        axios.post(BASE_URL + "/getUserData", Data)
             .then(response => {
                 console.log(response.status)
                 console.log(response.data)
-               
-                 var avg=response.data["user"]["0"].AvgValue
-                 var myval=response.data["user"]["0"].yourVal
+
+                var avg = response.data["user"]["0"].AvgValue
+                var myval = response.data["user"]["0"].yourVal
                 console.log(response.data["user"]["0"].AvgValue)
                 console.log(response.data["user"]["0"].yourVal)
-                console.log("d is"+myval)
-        
+                console.log("d is" + myval)
+
                 if (response.status === 200) {
                     console.log("Success fetching graph")
-                    this.setState({ 
-                        a:avg,
-                        b:myval,
-                        planetData :{
-                            
+                    this.setState({
+                        a: avg,
+                        b: myval,
+                        planetData: {
+
                             labels: ['Patient Prediction', 'All Predicted mean'],
-                            datasets: [   { 
-                                label:["Patient Prediction"],
-                              data:[
-                                myval,
-                                avg
-                              ],
-                              backgroundColor: ['rgba(99, 132, 0, 0.6)','rgba(255, 255, 102, 0.6)'],
-                            
+                            datasets: [{
+                                label: ["Patient Prediction"],
+                                data: [
+                                    myval,
+                                    avg
+                                ],
+                                backgroundColor: ['rgba(99, 132, 0, 0.6)', 'rgba(255, 255, 102, 0.6)'],
+
                             }]
-                          }
-                       });
+                        }
+                    });
                     // this.setState({
                     //     graphresults:response.data
                     // })
-                }else if(response.status === 300){
-                   this.setState({flag:"Please upload the data"})
-                }else{
-                    this.setState({flag:"Your results are being processed"})
+                } else if (response.status === 300) {
+                    this.setState({ flag: "Please upload the data" })
+                } else {
+                    this.setState({ flag: "Your results are being processed" })
                 }
             })
     }
 
+
     render() {
         let redirect = null;
+        let image = null
         if (!localStorage.getItem("googleId")) {
             redirect = <Redirect to="/" />
         }
-    //     if (this.state.graphresults) {
-    //         var details = this.state.graphresults.map(graph => {
-    //                 console.log(graph)
-    //                 console.log(graph.user)
-    //                 return(<h1>{graph.AvgValue}Al</h1>)
-    //     })
-    // }
 
+        if (this.state.predictedImage) {
+            image = <img className="img-fluid" src={this.state.predictedImage && this.state.predictedImage} />
+        }
 
         if (this.state.connections) {
             console.log("Got connections")
@@ -204,7 +229,6 @@ class Dashboard extends Component {
                 )
             })
         }
-        
 
 
         return (
@@ -219,7 +243,7 @@ class Dashboard extends Component {
                                 <Tab className="p-3 btn">Upload Data</Tab>
                                 <Tab className="p-3 btn">Create/Connect to a network</Tab>
                                 <Tab className="p-3 btn">Verify Data</Tab>
-                                <Tab className="p-3 btn" onClick={this.requestGraph}>Analyze Data</Tab>
+                                <Tab className="p-3 btn">Analyze Data</Tab>
                                 <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
                             </TabList>
 
@@ -231,8 +255,8 @@ class Dashboard extends Component {
                                     <div class="w-50 h-100 border bg-grey mx-auto pt-5 pb-5 text-center text-white">
                                         <p>Drop CSV file to upload</p>
 
-                                        <input type="file" name="files" onChange={this.onFileSelect}/>
-                                        <button  onClick={this.onSubmitForm}>Upload</button>
+                                        <input type="file" name="files" onChange={this.onFileSelect} />
+                                        <button onClick={this.onSubmitForm}>Upload</button>
                                         {/*<input type="hidden" name="propertyid" value="12345" />
                                         */}
                                     </div>
@@ -241,7 +265,6 @@ class Dashboard extends Component {
 
                             <TabPanel>
                                 <div class="d-flex flex-column p-5 justify-content-center">
-                              
                                     <h4 class="text-center text-white"><b>Welcome <span className="text-primary">{localStorage.getItem('username')}</span>
                                         , Make a new connection</b></h4>
                                     <h4 class="mb-5 text-center text-white"><b>or join in an existing one!</b></h4>
@@ -313,38 +336,30 @@ class Dashboard extends Component {
                                     <h4 class="text-center text-white">View your results </h4>
                                     <div class="d-flex flex-column p-5 justify-content-center">
                                         <table class="text-center text-white border">
-                                        <div className="w-50 h-50 align-center ml-5 mt-2">
-                                        <Bar
-                                data={this.state.planetData}
-                                options={{
-                                maintainAspectRatio: false,
-                                ticks:{
-                                beginAtZero:true
-                            }
-                                  }}
-                              />
-                              </div>
-                                        {this.state.flag}
-                                        {/* {details} */}
+                                            <div className="w-50 h-50 align-center ml-5 mt-2">
+                                                <Bar
+                                                    data={this.state.planetData}
+                                                    options={{
+                                                        maintainAspectRatio: false,
+                                                        ticks: {
+                                                            beginAtZero: true
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                            {this.state.flag}
+                                            {/* {details} */}
                                             <tr>
                                                 <div className="mb-1 mt-4">Your patient prediction for next year: {this.state.b}</div>
                                                 <div className="mb-4">Average patient prediction of all the hospitals: {this.state.a}</div>
 
-                                                <img className="img-fluid mt-3" src={require('../images/hospital1.png')} />
-
-                                                <img className="img-fluid mt-3" src={require('../images/Hospital1_dia.png')} />
-                                                <img className="img-fluid mt-3" src={require('../images/Hospital1_ha.png')} />
-                                                <img className="img-fluid mt-3" src={require('../images/Hospital1_fe.png')} />
-                                                <img className="img-fluid mt-3" src={require('../images/Hospital1_lc.png')} />
-                                               
+                                                {/*<img className="img-fluid" src={require('../images/hospital1.png')} />*/}
+                                                {image}
                                                 {/* <td>Darshil Kapadia.csv</td>
                                                 <td>2018-09-01</td>
                                                 <td><button class="btn btn-dash text-white ">Download</button></td> */}
                                             </tr>
                                         </table>
-                                       
-                                             
-                                               
                                     </div>
                                 </div>
                             </TabPanel>
