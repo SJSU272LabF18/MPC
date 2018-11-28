@@ -5,6 +5,7 @@ import Navbar from './Navbar'
 import { Redirect } from 'react-router';
 import {Bar} from 'react-chartjs-2'
 import axios from 'axios'
+import {BASE_URL} from './baseurl'
 
 import '../App.css'
 import 'react-tabs/style/react-tabs.css'
@@ -22,7 +23,7 @@ class Dashboard extends Component {
             graphresults:null,
             a:"",
             b:"",
-            planetData:""
+            // planetData:""
             // planetData :{
             //     labels: ['Your value', 'Average Value'],
             //     datasets: [   {
@@ -47,8 +48,8 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-
-        axios.get("http://10.250.204.114:5000/getAllConnections")
+        // axios.get(BASE_URL+"/getAllConnections")
+        axios.get(BASE_URL+"/getAllConnections")
             .then(response => {
                 if (response.status === 200) {
                     // console.log("response is ", response.data.return)
@@ -64,14 +65,14 @@ class Dashboard extends Component {
     joinConnection = (e) => {
 
         console.log("Connection Id is: ", e.target.id)
-        console.log("Sending Request to: http://10.250.204.114:5000/join")
+        console.log("Sending Request to:BASE_URL/join")
         const data = {
             "_id": e.target.id,
             "fileName": localStorage.getItem('fileName'),
             "userId":localStorage.getItem('googleId')
         }
         console.log("Request Data: ",data)
-        axios.post("http://10.250.204.114:5000/join", data)
+        axios.post(BASE_URL+"/join", data)
             .then(response => {
                 if (response.status === 200) {
                     console.log(response)
@@ -86,7 +87,7 @@ class Dashboard extends Component {
             "owner": localStorage.getItem("username"),
             "userCount": parseInt(this.state.connectionRequest)
         }
-        axios.post("http://192.168.43.184:5000/register", data)
+        axios.post(BASE_URL+"/register", data)
             .then(response => {
                 if (response.status === 200) {
                     console.log(response)
@@ -122,7 +123,7 @@ class Dashboard extends Component {
             "googleId":localStorage.getItem('googleId')
         }
         console.log("in request making");
-        axios.post("http://10.250.204.114:5000/upload", formData,config)
+        axios.post(BASE_URL+"/upload", formData,config)
         .then(response => {
             console.log(response.data);
         });
@@ -134,38 +135,39 @@ class Dashboard extends Component {
         const Data = {
             "userId":localStorage.getItem('googleId')
         }
-        axios.post("http://10.250.204.114:5000/getUserData",Data)
+        axios.post(BASE_URL+"/getUserData",Data)
             .then(response => {
                 console.log(response.status)
-                this.setState({
-                        a:response.data["user"]["0"].AvgValue,
-                        b:response.data["user"]["0"].yourVal
-                 })
-                 var c=response.data["user"]["0"].AvgValue
-                 var d=response.data["user"]["0"].yourVal
+                console.log(response.data)
+               
+                 var avg=response.data["user"]["0"].AvgValue
+                 var myval=response.data["user"]["0"].yourVal
                 console.log(response.data["user"]["0"].AvgValue)
                 console.log(response.data["user"]["0"].yourVal)
+                console.log("d is"+myval)
         
                 if (response.status === 200) {
                     console.log("Success fetching graph")
                     this.setState({ 
+                        a:avg,
+                        b:myval,
                         planetData :{
-                            labels: ['Your value', 'Average Value'],
-                            datasets: [   {
-                                  
-                              data:[
-                                c,
-                                d
                             
+                            labels: ['Patient Prediction', 'All Predicted mean'],
+                            datasets: [   { 
+                                label:["Patient Prediction"],
+                              data:[
+                                myval,
+                                avg
                               ],
                               backgroundColor: ['rgba(99, 132, 0, 0.6)','rgba(255, 255, 102, 0.6)'],
-                              width:'20cm'
+                            
                             }]
                           }
                        });
-                    this.setState({
-                        graphresults:response.data
-                    })
+                    // this.setState({
+                    //     graphresults:response.data
+                    // })
                 }else if(response.status === 300){
                    this.setState({flag:"Please upload the data"})
                 }else{
@@ -314,10 +316,11 @@ class Dashboard extends Component {
                                         <div className="w-50 h-50 align-center ml-5 mt-2">
                                         <Bar
                                 data={this.state.planetData}
-                             // width={100}
-                             // height={50}
                                 options={{
-                                maintainAspectRatio: false
+                                maintainAspectRatio: false,
+                                ticks:{
+                                beginAtZero:true
+                            }
                                   }}
                               />
                               </div>

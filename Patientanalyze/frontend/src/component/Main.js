@@ -7,6 +7,7 @@ import See2 from './See2';
 import See3 from './See3';
 import Navbar from './Navbar';
 import Create from './Create';
+import About from './About';
 import Delete from './Delete';
 import Dashboard from './Dashboard';
 
@@ -19,8 +20,8 @@ class Main extends Component {
             <Route exact path="/see1" component={See1}/> 
             <Route exact path="/see2" component={See2}/> 
             <Route exact path="/see3" component={See3}/> 
-             <Route exact path="/login" component={Login}/>
-             
+            <Route exact path="/login" component={Login}/>
+            <Route exact path="/about" component={About}/>
              <Route exact path="/create" component={Create}/> 
             {/* <Route exact path="/delete" component={Delete}/> */}
             <Route exact path="/analyze" component={Dashboard}/>

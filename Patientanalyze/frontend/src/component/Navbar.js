@@ -36,7 +36,7 @@ class Navbar extends Component {
         if (localStorage.getItem("googleId")) {
             check =
                 <ul className="navbar">
-                    <ul className="navbar-text mt-2 nav-text"><strong>About</strong></ul>
+                    <Link to ="/about" className="navbar-text mt-2 nav-text"><strong>About</strong></Link>
 
                     <ul className="navbar-text mt-2 nav-text"><strong>Blog</strong></ul>
 

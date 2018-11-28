@@ -199,6 +199,16 @@ text-decoration: none !important;
   padding-right: 30px;
   font-weight: 500
 }
+.describe{
+  /* font-family: 'AvenirNext-Regular',Helvetica,Arial,serif; */
+font-family: AvenirNext-Regular;
+font-size: 20px;
+color: #4A4A4A;
+line-height: 25px;
+text-shadow: 0 1px 4px rgba(0,0,0,0.50);
+
+margin-top: 10px;
+}
 
 /* Transition */
 .transition{
