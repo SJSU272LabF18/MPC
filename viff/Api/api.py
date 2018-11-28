@@ -11,7 +11,7 @@ from subprocess import Popen
 UPLOAD_FOLDER = '/home/adityadoshatti/1st_Sem/CMPE272/Project/Project-Team-12/viff/UploadFolder'
 ALLOWED_EXTENSIONS = set(['csv','xlsx'])
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 CORS(app)
 DETACHED_PROCESS = 0x00000008
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -131,10 +131,16 @@ def join_connection():
     else:
         return 'Connection Full', 404
 
-@app.route('/download', methods=['GET'])
+@app.route('/getImage', methods=['POST'])
 def downloadFile ():
-        path = "/home/adityadoshatti/1st_Sem/CMPE272/Project/Project-Team-12/ML/dist/predict"
-        return send_file(path, attachment_filename='predictData')
+    req_data = request.get_json()
+    print req_data
+    fileName = req_data['imageName']
+    pathToFile = app.config['UPLOAD_FOLDER'] + "/" + fileName
+    if os.path.exists(pathToFile):
+        return send_file(pathToFile, attachment_filename=fileName), 200
+    else:
+        return 'File Not Found', 400
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
