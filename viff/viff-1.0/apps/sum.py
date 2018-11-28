@@ -26,6 +26,9 @@ from viff.field import GF
 from viff.runtime import create_runtime, Runtime
 from viff.config import load_config
 
+
+import os
+
 parser = OptionParser()
 Runtime.add_options(parser)
 (options, args) = parser.parse_args()
@@ -39,13 +42,20 @@ def protocol(rt):
 
     def got_result(result):
         print "Sum:", result
-        print "Call something else here"
+        k= str(result)
+        k = k[1:-1]
+        result = int(k)
+        result *= 100
+        result = (result/3)
+        command = 'curl http://127.0.0.1:5000/updateAvgValue -X POST -d \'{\"AvgValue\": ' + str(result) +'}\' -H \"Content-Type: application/json\"'
+        os.system(command)
         rt.shutdown()
 
     x, y, z = rt.shamir_share([1, 2, 3], Zp, input)
-    sum = x + y + z
-    opened_sum = rt.open(sum)
+    sumVal = x + y + z
+    opened_sum = rt.open(sumVal)
     opened_sum.addCallback(got_result)
+
 
 pre_runtime = create_runtime(id, players, 1)
 pre_runtime.addCallback(protocol)

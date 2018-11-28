@@ -69,6 +69,31 @@ def getConnections():
     retVal['return']  = conList
     return jsonify(retVal), 200
 
+@app.route('/getUserData', methods=['POST'])
+def getUserData():
+    users = mongo.db.users
+    req_data = request.get_json()
+    print req_data
+    userId = req_data['userId']
+    #userId = 100029303757140601712
+    doc = users.find_one({'userId':str(userId)})
+    userData = []
+    if doc != None:
+        userData.append({'userId':doc['userId'], 'yourVal': doc['yourVal'], '_id':''+str(doc['_id']), 'AvgValue': doc['AvgValue']})
+        retVal = {}
+        retVal['user']  = userData
+        return jsonify(retVal), 200
+    else:
+        return "Not found", 404
+
+@app.route('/updateAvgValue', methods=['POST'])
+def updateAvgValue():
+    users = mongo.db.users
+    req_data = request.get_json()
+    data = req_data['AvgValue']
+    users.update({}, {'$set': {'AvgValue': data}},multi=True, upsert=True)
+    return "Done", 200
+
 @app.route('/join', methods=['POST'])
 def join_connection():
     req_data = request.get_json()
@@ -96,9 +121,10 @@ def join_connection():
         status = 0
         if status == 0:
             #print output
-            users.insert({'userId':userId, 'yourVal': value, 'AvgValue': 0})
+            value *= 100
+            users.insert({'userId':str(userId), 'yourVal': value, 'AvgValue': 0})
             retVal = {}
-            retVal['sum'] =  12172
+            retVal['sum'] =  'Will be updated soon!'
             return jsonify(retVal), 200
         else:
             'Joining Failed', 404
