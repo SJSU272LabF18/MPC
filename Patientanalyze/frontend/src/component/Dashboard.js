@@ -16,7 +16,8 @@ class Dashboard extends Component {
             connections: null,
             connectionRequest: null,
             pid: false,
-            photos:null
+            hospitalData:null,
+            predictedImage:null
         }
     }
 
@@ -39,6 +40,31 @@ class Dashboard extends Component {
                 }
 
             })
+        
+        if(localStorage.getItem("fileName")){
+            if(localStorage.getItem("fileName").search("xlsx") !== -1){
+                let imageName = localStorage.getItem("fileName").replace("xlsx","png") 
+                localStorage.setItem('imageName',imageName)
+            }else if(localStorage.getItem("fileName").search("csv") !== -1){
+                let imageName = localStorage.getItem("fileName").replace("csv","png") 
+                localStorage.setItem('imageName',imageName)
+            }else{
+
+            }
+            const data = {
+                imageName : localStorage.getItem("imageName")
+            }
+            axios.post("http://10.250.204.114:5000/getImage",data,{responseType:'arraybuffer'})
+                .then(response => {
+                    const base64 = btoa(
+                        new Uint8Array(response.data).reduce(
+                          (data, byte) => data + String.fromCharCode(byte),
+                          '',
+                        ),
+                      );
+                      this.setState({ predictedImage: "data:;base64," + base64 });
+                })
+        }
     }
 
     joinConnection = (e) => {
@@ -78,17 +104,16 @@ class Dashboard extends Component {
         const files = e.target.files[0]
         console.log(files)
         this.setState({
-            photos: files
+            hospitalData: files
         }, () => {
-            console.log(this.state.photos)
+            console.log(this.state.hospitalData)
         });
     }
 
     onSubmitForm = (e) => {
         console.log("here in form");
-        localStorage.setItem('fileName',this.state.photos.name)
         let formData = new FormData();
-        formData.append('file',this.state.photos)
+        formData.append('file',this.state.hospitalData)
         formData.append('googleId',localStorage.getItem('googleId'))
         //console.log(typeof formData.get('file'))
         this.setState({ pid: true })
@@ -105,14 +130,20 @@ class Dashboard extends Component {
         axios.post("http://10.250.204.114:5000/upload", formData,config)
         .then(response => {
             console.log(response.data);
+            localStorage.setItem('fileName',this.state.hospitalData.name)
         });
     }
 
 
     render() {
         let redirect = null;
+        let image = null
         if (!localStorage.getItem("googleId")) {
             redirect = <Redirect to="/" />
+        }
+
+        if(this.state.predictedImage){
+            image = <img className="img-fluid" src={this.state.predictedImage && this.state.predictedImage} />
         }
 
         if (this.state.connections) {
@@ -240,7 +271,8 @@ class Dashboard extends Component {
                                                 <div className="mb-1 mt-4">Your patient prediction for next year: 2341</div>
                                                 <div className="mb-4">Average patient prediction of all the hospitals: 2451</div>
 
-                                                <img className="img-fluid" src={require('../images/hospital1.png')} />
+                                                {/*<img className="img-fluid" src={require('../images/hospital1.png')} />*/}
+                                                {image}                        
                                                 {/* <td>Darshil Kapadia.csv</td>
                                                 <td>2018-09-01</td>
                                                 <td><button class="btn btn-dash text-white ">Download</button></td> */}
