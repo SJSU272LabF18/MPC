@@ -336,7 +336,7 @@ class Dashboard extends Component {
                                     <h4 class="text-center text-white">View your results </h4>
                                     <div class="d-flex flex-column p-5 justify-content-center">
                                         <table class="text-center text-white border">
-                                            <div className="w-50 h-50 align-center ml-5 mt-2">
+                                            <div className="w-50 h-100 align-center ml-5 mt-2">
                                                 <Bar
                                                     data={this.state.planetData}
                                                     options={{

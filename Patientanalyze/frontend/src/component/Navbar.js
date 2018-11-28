@@ -73,11 +73,10 @@ class Navbar extends Component {
         } else {
             check = <ul className="navbar">
 
-                <ul className="navbar-text mt-2 nav-text"><strong>About</strong></ul>
+                <Link to="/about" className="navbar-text mt-2 nav-text"><strong>About</strong></Link>
                 <ul className="navbar-text mt-2 nav-text"><strong>Blog</strong></ul>
                 <ul className="navbar-text mt-2 nav-text"><strong>Contact</strong></ul>
                 <Link to="/login" className="navbar-text nav-text mt-2 ml-5"><strong>Login</strong></Link>
-
             </ul>
         }
         return (
