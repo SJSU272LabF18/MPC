@@ -243,7 +243,7 @@ class Dashboard extends Component {
                                 <Tab className="p-3 btn">Upload Data</Tab>
                                 <Tab className="p-3 btn">Create/Connect to a network</Tab>
                                 <Tab className="p-3 btn">Verify Data</Tab>
-                                <Tab className="p-3 btn">Analyze Data</Tab>
+                                <Tab className="p-3 btn" onClick={this.requestGraph}>Analyze Data</Tab>
                                 <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
                             </TabList>
 
