@@ -174,7 +174,7 @@ class Dashboard extends Component {
                         <td>{data.owner}</td>
                         <td>{data.userCount}</td>
                         <td>{data.currRemainingCount}</td>
-                        <td><button class="btn-sm btn-warning" id={data._id} onClick={this.joinConnection}>Join</button></td>
+                        <td><button class="btn-sm btn-warning" id={data._id} onClick={this.joinConnection} disabled={!localStorage.getItem("fileName")}>Join</button></td>
                     </tr>
                 )
             })
