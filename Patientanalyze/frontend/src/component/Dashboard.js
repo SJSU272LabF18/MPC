@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 
 import { Tabs, Tab, TabList, TabPanel } from 'react-tabs'
 import Navbar from './Navbar'
+import { Chart, Pie, Line, Bar } from 'react-chartjs-2'
 import { Redirect } from 'react-router';
 import axios from 'axios'
+import { BASE_URL } from './baseurl'
 
 import '../App.css'
 import 'react-tabs/style/react-tabs.css'
@@ -22,19 +24,19 @@ class Dashboard extends Component {
             a: "",
             b: "",
             planetData: "",
-                        // planetData :{
-                        //     labels: ['Your value', 'Average Value'],
-                        //     datasets: [   {
+            // planetData :{
+            //     labels: ['Your value', 'Average Value'],
+            //     datasets: [   {
 
-                        //       data:[
-                        //         328,
-                        //         26
+            //       data:[
+            //         328,
+            //         26
 
-                        //       ],
-                        //       backgroundColor: ['rgba(99, 132, 0, 0.6)','rgba(255, 255, 102, 0.6)'],
-                        //       width:'20cm'
-                        //     }]
-                        //   }
+            //       ],
+            //       backgroundColor: ['rgba(99, 132, 0, 0.6)','rgba(255, 255, 102, 0.6)'],
+            //       width:'20cm'
+            //     }]
+            //   }
             hospitalData: null,
             predictedImage: null,
         }
@@ -48,8 +50,8 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-
-        axios.get("http://10.250.204.114:5000/getAllConnections")
+        // axios.get(BASE_URL+"/getAllConnections")
+        axios.get(BASE_URL + "/getAllConnections")
             .then(response => {
                 if (response.status === 200) {
                     console.log("response is ", response.data.return)
@@ -89,14 +91,14 @@ class Dashboard extends Component {
     joinConnection = (e) => {
 
         console.log("Connection Id is: ", e.target.id)
-        console.log("Sending Request to: http://10.250.204.114:5000/join")
+        console.log("Sending Request to:BASE_URL/join")
         const data = {
             "_id": e.target.id,
             "fileName": localStorage.getItem('fileName'),
             "userId": localStorage.getItem('googleId')
         }
         console.log("Request Data: ", data)
-        axios.post("http://10.250.204.114:5000/join", data)
+        axios.post(BASE_URL + "/join", data)
             .then(response => {
                 if (response.status === 200) {
                     console.log(response)
@@ -111,7 +113,7 @@ class Dashboard extends Component {
             "owner": localStorage.getItem("username"),
             "userCount": parseInt(this.state.connectionRequest)
         }
-        axios.post("http://192.168.43.184:5000/register", data)
+        axios.post(BASE_URL + "/register", data)
             .then(response => {
                 if (response.status === 200) {
                     console.log(response)
@@ -146,11 +148,59 @@ class Dashboard extends Component {
             "googleId": localStorage.getItem('googleId')
         }
         console.log("in request making");
-        axios.post("http://10.250.204.114:5000/upload", formData, config)
+        axios.post(BASE_URL + "/upload", formData, config)
             .then(response => {
                 console.log(response.data);
                 localStorage.setItem('fileName', this.state.hospitalData.name)
+
             });
+    }
+
+    requestGraph = (e) => {
+        console.log("Inside graph requestr")
+        console.log("here" + localStorage.getItem('googleId'))
+        const Data = {
+            "userId": localStorage.getItem('googleId')
+        }
+        axios.post(BASE_URL + "/getUserData", Data)
+            .then(response => {
+                console.log(response.status)
+                console.log(response.data)
+
+                var avg = response.data["user"]["0"].AvgValue
+                var myval = response.data["user"]["0"].yourVal
+                console.log(response.data["user"]["0"].AvgValue)
+                console.log(response.data["user"]["0"].yourVal)
+                console.log("d is" + myval)
+
+                if (response.status === 200) {
+                    console.log("Success fetching graph")
+                    this.setState({
+                        a: avg,
+                        b: myval,
+                        planetData: {
+
+                            labels: ['Patient Prediction', 'All Predicted mean'],
+                            datasets: [{
+                                label: ["Patient Prediction"],
+                                data: [
+                                    myval,
+                                    avg
+                                ],
+                                backgroundColor: ['rgba(99, 132, 0, 0.6)', 'rgba(255, 255, 102, 0.6)'],
+
+                            }]
+                        }
+                    });
+                    // this.setState({
+                    //     graphresults:response.data
+                    // })
+                } else if (response.status === 300) {
+                    this.setState({ flag: "Please upload the data" })
+                } else {
+                    this.setState({ flag: "Your results are being processed" })
+                }
+            })
     }
 
 
@@ -286,9 +336,22 @@ class Dashboard extends Component {
                                     <h4 class="text-center text-white">View your results </h4>
                                     <div class="d-flex flex-column p-5 justify-content-center">
                                         <table class="text-center text-white border">
+                                            <div className="w-50 h-50 align-center ml-5 mt-2">
+                                                <Bar
+                                                    data={this.state.planetData}
+                                                    options={{
+                                                        maintainAspectRatio: false,
+                                                        ticks: {
+                                                            beginAtZero: true
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                            {this.state.flag}
+                                            {/* {details} */}
                                             <tr>
-                                                <div className="mb-1 mt-4">Your patient prediction for next year: 2341</div>
-                                                <div className="mb-4">Average patient prediction of all the hospitals: 2451</div>
+                                                <div className="mb-1 mt-4">Your patient prediction for next year: {this.state.b}</div>
+                                                <div className="mb-4">Average patient prediction of all the hospitals: {this.state.a}</div>
 
                                                 {/*<img className="img-fluid" src={require('../images/hospital1.png')} />*/}
                                                 {image}
