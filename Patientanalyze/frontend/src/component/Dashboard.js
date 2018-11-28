@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { Tabs, Tab, TabList, TabPanel } from 'react-tabs'
 import Navbar from './Navbar'
 import { Redirect } from 'react-router';
+import {Bar} from 'react-chartjs-2'
 import axios from 'axios'
 
 import '../App.css'
@@ -16,7 +17,25 @@ class Dashboard extends Component {
             connections: null,
             connectionRequest: null,
             pid: false,
-            photos:null
+            photos:null,
+            flag:"",
+            graphresults:null,
+            a:"",
+            b:"",
+            planetData:""
+            // planetData :{
+            //     labels: ['Your value', 'Average Value'],
+            //     datasets: [   {
+                      
+            //       data:[
+            //         328,
+            //         26
+                
+            //       ],
+            //       backgroundColor: ['rgba(99, 132, 0, 0.6)','rgba(255, 255, 102, 0.6)'],
+            //       width:'20cm'
+            //     }]
+            //   }
         }
     }
 
@@ -32,7 +51,8 @@ class Dashboard extends Component {
         axios.get("http://10.250.204.114:5000/getAllConnections")
             .then(response => {
                 if (response.status === 200) {
-                    console.log("response is ", response.data.return)
+                    // console.log("response is ", response.data.return)
+                    console.log(response.data.return)
                     this.setState({
                         connections: response.data.return
                     })
@@ -107,13 +127,66 @@ class Dashboard extends Component {
             console.log(response.data);
         });
     }
-
+    
+    requestGraph = (e) => {
+        console.log("Inside graph requestr")
+        console.log("here"+localStorage.getItem('googleId'))
+        const Data = {
+            "userId":localStorage.getItem('googleId')
+        }
+        axios.post("http://10.250.204.114:5000/getUserData",Data)
+            .then(response => {
+                console.log(response.status)
+                this.setState({
+                        a:response.data["user"]["0"].AvgValue,
+                        b:response.data["user"]["0"].yourVal
+                 })
+                 var c=response.data["user"]["0"].AvgValue
+                 var d=response.data["user"]["0"].yourVal
+                console.log(response.data["user"]["0"].AvgValue)
+                console.log(response.data["user"]["0"].yourVal)
+        
+                if (response.status === 200) {
+                    console.log("Success fetching graph")
+                    this.setState({ 
+                        planetData :{
+                            labels: ['Your value', 'Average Value'],
+                            datasets: [   {
+                                  
+                              data:[
+                                c,
+                                d
+                            
+                              ],
+                              backgroundColor: ['rgba(99, 132, 0, 0.6)','rgba(255, 255, 102, 0.6)'],
+                              width:'20cm'
+                            }]
+                          }
+                       });
+                    this.setState({
+                        graphresults:response.data
+                    })
+                }else if(response.status === 300){
+                   this.setState({flag:"Please upload the data"})
+                }else{
+                    this.setState({flag:"Your results are being processed"})
+                }
+            })
+    }
 
     render() {
         let redirect = null;
         if (!localStorage.getItem("googleId")) {
             redirect = <Redirect to="/" />
         }
+    //     if (this.state.graphresults) {
+    //         var details = this.state.graphresults.map(graph => {
+    //                 console.log(graph)
+    //                 console.log(graph.user)
+    //                 return(<h1>{graph.AvgValue}Al</h1>)
+    //     })
+    // }
+
 
         if (this.state.connections) {
             console.log("Got connections")
@@ -129,6 +202,7 @@ class Dashboard extends Component {
                 )
             })
         }
+        
 
 
         return (
@@ -143,7 +217,7 @@ class Dashboard extends Component {
                                 <Tab className="p-3 btn">Upload Data</Tab>
                                 <Tab className="p-3 btn">Create/Connect to a network</Tab>
                                 <Tab className="p-3 btn">Verify Data</Tab>
-                                <Tab className="p-3 btn">Analyze Data</Tab>
+                                <Tab className="p-3 btn" onClick={this.requestGraph}>Analyze Data</Tab>
                                 <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
                             </TabList>
 
@@ -165,6 +239,7 @@ class Dashboard extends Component {
 
                             <TabPanel>
                                 <div class="d-flex flex-column p-5 justify-content-center">
+                              
                                     <h4 class="text-center text-white"><b>Welcome <span className="text-primary">{localStorage.getItem('username')}</span>
                                         , Make a new connection</b></h4>
                                     <h4 class="mb-5 text-center text-white"><b>or join in an existing one!</b></h4>
@@ -236,16 +311,37 @@ class Dashboard extends Component {
                                     <h4 class="text-center text-white">View your results </h4>
                                     <div class="d-flex flex-column p-5 justify-content-center">
                                         <table class="text-center text-white border">
+                                        <div className="w-50 h-50 align-center ml-5 mt-2">
+                                        <Bar
+                                data={this.state.planetData}
+                             // width={100}
+                             // height={50}
+                                options={{
+                                maintainAspectRatio: false
+                                  }}
+                              />
+                              </div>
+                                        {this.state.flag}
+                                        {/* {details} */}
                                             <tr>
-                                                <div className="mb-1 mt-4">Your patient prediction for next year: 2341</div>
-                                                <div className="mb-4">Average patient prediction of all the hospitals: 2451</div>
+                                                <div className="mb-1 mt-4">Your patient prediction for next year: {this.state.b}</div>
+                                                <div className="mb-4">Average patient prediction of all the hospitals: {this.state.a}</div>
 
-                                                <img className="img-fluid" src={require('../images/hospital1.png')} />
+                                                <img className="img-fluid mt-3" src={require('../images/hospital1.png')} />
+
+                                                <img className="img-fluid mt-3" src={require('../images/Hospital1_dia.png')} />
+                                                <img className="img-fluid mt-3" src={require('../images/Hospital1_ha.png')} />
+                                                <img className="img-fluid mt-3" src={require('../images/Hospital1_fe.png')} />
+                                                <img className="img-fluid mt-3" src={require('../images/Hospital1_lc.png')} />
+                                               
                                                 {/* <td>Darshil Kapadia.csv</td>
                                                 <td>2018-09-01</td>
                                                 <td><button class="btn btn-dash text-white ">Download</button></td> */}
                                             </tr>
                                         </table>
+                                       
+                                             
+                                               
                                     </div>
                                 </div>
                             </TabPanel>
