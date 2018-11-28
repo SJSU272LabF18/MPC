@@ -65,7 +65,8 @@ def getConnections():
     conList = []
     #{u'owner': u'MGM Hospital', u'currRemainingCount': 0, u'_id': ObjectId('5bf87e28101c377f12d94d7f'), u'userCount': 2}
     for doc in connections.find():
-        conList.append({'owner':doc['owner'], 'currRemainingCount': doc['currRemainingCount'], '_id':''+str(doc['_id']), 'userCount': doc['userCount']})
+        if doc['currRemainingCount'] > 0:
+            conList.append({'owner':doc['owner'], 'currRemainingCount': doc['currRemainingCount'], '_id':''+str(doc['_id']), 'userCount': doc['userCount']})
     retVal['return']  = conList
     return jsonify(retVal), 200
 
