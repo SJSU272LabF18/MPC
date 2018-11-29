@@ -185,9 +185,19 @@ class Dashboard extends Component {
                                 label: ["Patient Prediction"],
                                 data: [
                                     myval,
-                                    avg
+                                    avg,
+                                    0
                                 ],
                                 backgroundColor: ['rgba(99, 132, 0, 0.6)', 'rgba(255, 255, 102, 0.6)'],
+                                options: {
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
+                                }
 
                             }]
                         }
@@ -242,7 +252,7 @@ class Dashboard extends Component {
                             <TabList className="float-left d-flex flex-column h-100 p-5 text-white justify-content-center border rounded">
                                 <Tab className="p-3 btn">Upload Data</Tab>
                                 <Tab className="p-3 btn">Create/Connect to a network</Tab>
-                                <Tab className="p-3 btn">Verify Data</Tab>
+                               
                                 <Tab className="p-3 btn" onClick={this.requestGraph}>Analyze Data</Tab>
                                 <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
                             </TabList>
@@ -309,34 +319,13 @@ class Dashboard extends Component {
                             </TabPanel>
 
 
-
-                            <TabPanel>
-                                <div class="d-flex flex-column justify-content-center p-5">
-
-                                    <h4 class="text-center text-white">Verify your data before letting other </h4>
-                                    <h4 class="text-center text-white">parties use it.</h4>
-                                    <div class="d-flex flex-column p-5 justify-content-center">
-                                        <table class="text-center text-white border">
-                                            <th>File Name</th>
-                                            <th>Uploaded On</th>
-                                            <th>Action</th>
-                                            <tr>
-                                                <td>Darshil Kapadia.csv</td>
-                                                <td>2018-09-01</td>
-                                                <td><button class="btn-sm btn btn-dash text-white ">Download</button></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-
-                                </div>
-                            </TabPanel>
-
                             <TabPanel>
                                 <div class="d-flex flex-column justify-content-center p-5">
                                     <h4 class="text-center text-white">View your results </h4>
                                     <div class="d-flex flex-column p-5 justify-content-center">
-                                        <table class="text-center text-white border">
-                                            <div className="w-50 h-100 align-center ml-5 mt-2">
+                                        <table class="text-center text-white border"><br></br>
+                                            <div className="w-75 h-100 align-center ml-5 mt-2">
+
                                                 <Bar
                                                     data={this.state.planetData}
                                                     options={{

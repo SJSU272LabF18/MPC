@@ -61,7 +61,7 @@ class Navbar extends Component {
 
                     <ul className="navbar-text mt-2 nav-text"><strong>Blog</strong></ul>
 
-                    <ul className="navbar-text mt-2 nav-text"><strong>Contact</strong></ul>
+                    <Link to="/contact" className="navbar-text mt-2 nav-text ml-4"><strong>Contact</strong></Link>
                     <ul className="navbar-text mt-2 nav-text"><strong><Link to="/analyze">Dashboard</Link></strong></ul>
                     <button
                         // buttonText="Logout"
@@ -75,7 +75,7 @@ class Navbar extends Component {
 
                 <Link to="/about" className="navbar-text mt-2 nav-text"><strong>About</strong></Link>
                 <ul className="navbar-text mt-2 nav-text"><strong>Blog</strong></ul>
-                <ul className="navbar-text mt-2 nav-text"><strong>Contact</strong></ul>
+                <Link to="/contact" className="navbar-text mt-2 nav-text ml-4"><strong>Contact</strong></Link>
                 <Link to="/login" className="navbar-text nav-text mt-2 ml-5"><strong>Login</strong></Link>
             </ul>
         }

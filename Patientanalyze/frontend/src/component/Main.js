@@ -10,6 +10,7 @@ import Create from './Create';
 import About from './About';
 import Delete from './Delete';
 import Dashboard from './Dashboard';
+import Contact from './contact'
 
 class Main extends Component {
     state = {  }
@@ -22,7 +23,8 @@ class Main extends Component {
             <Route exact path="/see3" component={See3}/> 
             <Route exact path="/login" component={Login}/>
             <Route exact path="/about" component={About}/>
-             <Route exact path="/create" component={Create}/> 
+            <Route exact path="/create" component={Create}/> 
+            <Route exact path="/contact" component={Contact}/>
             {/* <Route exact path="/delete" component={Delete}/> */}
             <Route exact path="/analyze" component={Dashboard}/>
         </div>
