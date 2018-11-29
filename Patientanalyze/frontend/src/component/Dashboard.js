@@ -75,7 +75,7 @@ class Dashboard extends Component {
             const data = {
                 imageName: localStorage.getItem("imageName")
             }
-            axios.post("http://10.250.204.114:5000/getImage", data, { responseType: 'arraybuffer' })
+            axios.post(BASE_URL + "/getImage", data, { responseType: 'arraybuffer' })
                 .then(response => {
                     const base64 = btoa(
                         new Uint8Array(response.data).reduce(
