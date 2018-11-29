@@ -6,7 +6,13 @@ from flask_pymongo import PyMongo
 from werkzeug.utils import secure_filename
 from bson.objectid import ObjectId
 from predict import Prediction
+import pandas as pd
 from subprocess import Popen
+from simplecrypt import encrypt, decrypt
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 UPLOAD_FOLDER = '/home/adityadoshatti/1st_Sem/CMPE272/Project/Project-Team-12/viff/UploadFolder'
 ALLOWED_EXTENSIONS = set(['csv','xlsx'])
@@ -30,11 +36,14 @@ def upload_file():
     print request.files
     if 'file' not in request.files:
         return "No file found"
-    
     file = request.files['file']
     if allowed_file(file.filename):
-        print app.config['UPLOAD_FOLDER'] + "/" + file.filename
-        file.save(app.config['UPLOAD_FOLDER'] + "/" + file.filename)
+        file.save(app.config['UPLOAD_FOLDER'] + "/Data/" + file.filename)
+        f = open(app.config['UPLOAD_FOLDER'] + "/Data/" + file.filename,'r').read()
+        ciphertext = encrypt('USERPASSWORD',f) #this .encode('utf8') is the bit im unsure about
+        e = open(app.config['UPLOAD_FOLDER'] + "/" + file.filename + ".enc",'wb') # file.enc doesn't need to exist, python will create it
+        e.write(ciphertext)
+        e.close
         return "File successfully saved"
     else:
         return "Invalid file type"
@@ -102,7 +111,17 @@ def join_connection():
     fileName = req_data['fileName']
     userId = req_data['userId']
     p = Prediction()
-    value = int(p.run(app.config['UPLOAD_FOLDER'] + "/" + fileName))
+    # fo = open(app.config['UPLOAD_FOLDER'] + "/" + "ad.enc",'rb').read()
+    # # Decrypts the data, requires a user-input password
+    # CSVplaintext = decrypt('USERPASSWORD', fo).decode('utf8')
+
+    # #create a temp csv-like file to pass to pandas.read_csv()
+    # DATA=StringIO(CSVplaintext)
+
+    # # Makes a panda dataframe with the data
+    # df = pd.read_excel(DATA)
+    # print df.head()
+    value = int(p.run(app.config['UPLOAD_FOLDER'] + "/Data/" + fileName))
     #conn_id = '5bf8ab7c101c372f28c65c2b'
     users = mongo.db.users
     connections = mongo.db.connections
@@ -137,7 +156,7 @@ def downloadFile ():
     req_data = request.get_json()
     print req_data
     fileName = req_data['imageName']
-    pathToFile = app.config['UPLOAD_FOLDER'] + "/" + fileName
+    pathToFile = app.config['UPLOAD_FOLDER'] + "/Data/" + fileName
     if os.path.exists(pathToFile):
         return send_file(pathToFile, attachment_filename=fileName), 200
     else:
